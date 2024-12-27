@@ -12,14 +12,18 @@ const Pagination: FC<PaginationProps> = ({currentPage, totalPages, onPageChange}
 
     return (
         <div>
-            <ul className="pagination">
+            <ul className="flex justify-center items-center gap-1">
                 {currentPage > 1 && (
                     <li onClick={() => onPageChange(currentPage - 1)}>
                         <button>Prev</button>
                     </li>
                 )}
                 {pages.map((page) => (
-                    <li key={page} onClick={() => onPageChange(page)} className={currentPage === page ? 'active' : ''}>
+                    <li
+                        key={page}
+                        onClick={() => onPageChange(page)}
+                        className={`p-1 rounded ${currentPage === page ? 'bg-blue-500 text-white' : 'hover:bg-gray-200'}`}
+                    >
                         <button>{page}</button>
                     </li>
                 ))}
