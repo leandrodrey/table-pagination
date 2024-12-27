@@ -1,6 +1,5 @@
 import {FC, ReactNode, Suspense, useState} from 'react';
 import useSWR from "swr";
-import {fetcher} from "../utils/fetcher.ts";
 import {ICharacter} from "../interfaces/ICharacter.ts";
 import {ICharacterTable} from "../interfaces/ICharacterTable.ts";
 import useFiltersStore from "../hooks/useFiltersStore.ts";
@@ -10,6 +9,7 @@ import Pagination from "./Pagination.tsx";
 import CharacterFilters from "./CharacterFilters.tsx";
 import Table from "./Table.tsx";
 import Image from "./Image.tsx";
+import {characterService} from "../services/characterService.ts";
 
 interface ColumnConfig<T> {
     header: string;
@@ -23,24 +23,22 @@ const TableContainer: FC = () => {
     /* Set the currentPage value to 1 */
     const [currentPage, setCurrentPage] = useState(1);
     const filters = useFiltersStore((state) => state.filters);
+    const setFilters = useFiltersStore((state) => state.setFilters);
 
-    const buildFilterUrl = () => {
-        let url = `https://rickandmortyapi.com/api/character?page=${currentPage}`;
-        const filterParams = Object.entries(filters)
-            .filter(([value]) => value !== '')
-            .map(([key, value]) => `${key}=${value}`);
-        if (filterParams.length > 0) {
-            url += `&${filterParams.join('&')}`;
-        }
-        return url;
-    };
-
-    /*We use SWR to get the data from the API and send the currentPage as a parameter */
-    const {data, error, isLoading} = useSWR(buildFilterUrl(), fetcher);
+    /* We use SWR to get the data from the service */
+    const { data, error, isLoading } = useSWR(
+        [`/api/characters?page=${currentPage}`, filters], // We use the filters as a dependency
+        ([]) => characterService.getCharacters(currentPage)
+    );
 
     if (isLoading) return <div><Loader /></div>
     if (error) return <div>Error: {error.message}</div>
-    if (!data.results) return <div>No results found</div>
+    if (!data?.results) {
+        setFilters({ status: '', species: '', gender: '' });
+        return (
+            <div className="text-white text-xl text-center pt-8">No results found</div>
+        )
+    }
 
     /* Get the data from the API as ICharacter[] */
     const characters: ICharacter[] = data.results;
