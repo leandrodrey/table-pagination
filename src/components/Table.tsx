@@ -21,6 +21,7 @@ const Table = <T extends BaseTableItem>({items, columns}: TableProps<T>) => {
 
     const { sortedItems, sortKey, sortOrder, handleHeaderClick } = useSortTable({ items });
 
+    // @ts-ignore
     return (
         <table className="text-left">
             <thead>
