@@ -21,6 +21,7 @@ data from the API and the Table component, which is responsible for rendering th
 
 ### Production dependencies
 - SWR to fetch data from the API
+- Zustand to manage the state of the filters
 
 ### Development dependencies
 - ESLint
