@@ -1,50 +1,29 @@
-# React + TypeScript + Vite
+# Rick and Morty Characters
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+App to show the characters of Rick and Morty using the API: https://rickandmortyapi.com
 
-Currently, two official plugins are available:
+## About the project
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+The principal components are the TableContainer component, which is responsible for fetching the 
+data from the API and the Table component, which is responsible for rendering the table.
 
-## Expanding the ESLint configuration
+**The TableContainer component**:
+- Uses the useSWR hook to fetch the data from the API.
+- Uses the characterAdapter to convert the data from the API to the ICharacterTable interface.
+- Uses the useState hook to manage the state of the currentPage variable and render the Pagination component.
+- Configures the columns of the table and defines a render component for each column if necessary.
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+**The Table component**:
+- Uses the useSortTable custom hook to sort the current page of the table.
+- Renders the table with the configured columns and the sorted items.
 
-- Configure the top-level `parserOptions` property like this:
+## Dependencies
 
-```js
-export default tseslint.config({
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
-```
+### Production dependencies
+- SWR to fetch data from the API
 
-- Replace `tseslint.configs.recommended` to `tseslint.configs.recommendedTypeChecked` or `tseslint.configs.strictTypeChecked`
-- Optionally add `...tseslint.configs.stylisticTypeChecked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and update the config:
-
-```js
-// eslint.config.js
-import react from 'eslint-plugin-react'
-
-export default tseslint.config({
-  // Set the react version
-  settings: { react: { version: '18.3' } },
-  plugins: {
-    // Add the react plugin
-    react,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended rules
-    ...react.configs.recommended.rules,
-    ...react.configs['jsx-runtime'].rules,
-  },
-})
-```
+### Development dependencies
+- ESLint
+- Tailwind CSS
+- TypeScript
+- Vite
