@@ -1,22 +1,13 @@
-import {ChangeEvent, FC, useState} from 'react';
-import {IFilterValues} from "../interfaces/IFilterValues.ts";
+import {ChangeEvent, FC} from 'react';
+import useFiltersStore from "../hooks/useFiltersStore.ts";
 
-interface CharacterFiltersProps {
-    onFilterChange: (filters: IFilterValues) => void;
-}
-
-const CharacterFilters: FC<CharacterFiltersProps> = ({ onFilterChange }) => {
-    const [filters, setFilters] = useState<IFilterValues>({
-        status: '',
-        species: '',
-        gender: '',
-    });
+const CharacterFilters: FC = () => {
+    const filters = useFiltersStore((state) => state.filters);
+    const setFilters = useFiltersStore((state) => state.setFilters);
 
     const handleFilterChange = (event: ChangeEvent<HTMLSelectElement>) => {
         const { name, value } = event.target;
-        const newFilters = { ...filters, [name]: value };
-        setFilters(newFilters);
-        onFilterChange(newFilters);
+        setFilters({ ...filters, [name]: value });
     };
 
     return (

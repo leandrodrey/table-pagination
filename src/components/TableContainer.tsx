@@ -3,8 +3,8 @@ import useSWR from "swr";
 import {fetcher} from "../utils/fetcher.ts";
 import {ICharacter} from "../interfaces/ICharacter.ts";
 import {ICharacterTable} from "../interfaces/ICharacterTable.ts";
+import useFiltersStore from "../hooks/useFiltersStore.ts";
 import {characterAdapter} from "../adapters/characterAdapter.ts";
-import {IFilterValues} from "../interfaces/IFilterValues.ts";
 import Loader from "./Loader.tsx";
 import Pagination from "./Pagination.tsx";
 import CharacterFilters from "./CharacterFilters.tsx";
@@ -22,16 +22,12 @@ const TableContainer: FC = () => {
 
     /* Set the currentPage value to 1 */
     const [currentPage, setCurrentPage] = useState(1);
-    const [filters, setFilters] = useState<IFilterValues>({
-        status: '',
-        species: '',
-        gender: '',
-    });
+    const filters = useFiltersStore((state) => state.filters);
 
     const buildFilterUrl = () => {
         let url = `https://rickandmortyapi.com/api/character?page=${currentPage}`;
         const filterParams = Object.entries(filters)
-            .filter(([key, value]) => value !== '')
+            .filter(([value]) => value !== '')
             .map(([key, value]) => `${key}=${value}`);
         if (filterParams.length > 0) {
             url += `&${filterParams.join('&')}`;
@@ -44,8 +40,7 @@ const TableContainer: FC = () => {
 
     if (isLoading) return <div><Loader /></div>
     if (error) return <div>Error: {error.message}</div>
-
-    if (data.results === 0) return <div>No results found</div>
+    if (!data.results) return <div>No results found</div>
 
     /* Get the data from the API as ICharacter[] */
     const characters: ICharacter[] = data.results;
@@ -59,11 +54,6 @@ const TableContainer: FC = () => {
     /* Update the currentPage variable when the page changes */
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
-    };
-
-    /* Update the filters state when the filter changes */
-    const handleFilterChange = (newFilters: IFilterValues) => {
-        setFilters(newFilters);
     };
 
     /* Define the columns of the table and if necessary we can define a render component for each one */
@@ -82,7 +72,7 @@ const TableContainer: FC = () => {
     return (
         <>
             <div className="flex justify-center flex-col items-center py-4">
-                <CharacterFilters onFilterChange={handleFilterChange} />
+                <CharacterFilters/>
                 <Pagination
                     currentPage={currentPage}
                     totalPages={totalPages}
