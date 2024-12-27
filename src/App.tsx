@@ -1,14 +1,15 @@
 import './App.css'
 import TableContainer from "./components/TableContainer.tsx";
-import Loader from "./components/Loader.tsx";
 
 function App() {
 
     return (
         <>
-            <div className="flex justify-center items-center h-screen w-full">
+            <div className="flex flex-col w-full bg-gradient-to-r from-blue-500 to-purple-500">
+                <div className="flex justify-center items-center">
+                    <h1 className="text-4xl font-bold py-4">Rick and Morty Characters</h1>
+                </div>
                 <TableContainer/>
-                <Loader/>
             </div>
         </>
     )
