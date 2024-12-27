@@ -8,23 +8,23 @@ The principal components are the TableContainer component, which is responsible 
 data from the API and the Table component, which is responsible for rendering the table.
 
 **The TableContainer component**:
-- Uses the useSWR hook to fetch the data from the API.
+- Uses the useSWR hook to call the service and fetch the data.
 - Uses the characterAdapter to convert the data from the API to the ICharacterTable interface.
 - Uses the useState hook to manage the state of the currentPage variable and render the Pagination component.
 - Configures the columns of the table and defines a render component for each column if necessary.
 
 **The Table component**:
-- Uses the useSortTable custom hook to sort the current page of the table.
 - Renders the table with the configured columns and the sorted items.
+- Uses the useSortTable custom hook to sort the items of the current page.
 
 ## Dependencies
 
 ### Production dependencies
-- SWR to fetch data from the API
-- Zustand to manage the state of the filters
+- SWR to provide data fetching, caching, revalidation and error handling.
+- Zustand to manage the state of the filters.
 
 ### Development dependencies
-- ESLint
-- Tailwind CSS
-- TypeScript
-- Vite
+- ESLint.
+- Tailwind CSS.
+- TypeScript.
+- Vite.
