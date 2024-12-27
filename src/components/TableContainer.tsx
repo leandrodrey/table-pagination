@@ -4,8 +4,10 @@ import {fetcher} from "../utils/fetcher.ts";
 import {ICharacter} from "../interfaces/ICharacter.ts";
 import {ICharacterTable} from "../interfaces/ICharacterTable.ts";
 import {characterAdapter} from "../adapters/characterAdapter.ts";
+import {IFilterValues} from "../interfaces/IFilterValues.ts";
 import Loader from "./Loader.tsx";
 import Pagination from "./Pagination.tsx";
+import CharacterFilters from "./CharacterFilters.tsx";
 import Table from "./Table.tsx";
 import Image from "./Image.tsx";
 
@@ -13,65 +15,74 @@ interface ColumnConfig<T> {
     header: string;
     key: keyof T;
     render?: (value: any, item: T) => ReactNode;
+    sortable?: boolean;
 }
 
 const TableContainer: FC = () => {
 
-    /* El valor de currentPage se inicializa en 1 */
+    /* Set the currentPage value to 1 */
     const [currentPage, setCurrentPage] = useState(1);
+    const [filters, setFilters] = useState<IFilterValues>({
+        status: '',
+        species: '',
+        gender: '',
+    });
 
-    /* Usamos useSWR para obtener los datos de la API de Rick and Morty y le enviamos la currentPage como parametro */
-    const {data, error, isLoading} = useSWR(`https://rickandmortyapi.com/api/character?page=${currentPage}`, fetcher)
+    const buildFilterUrl = () => {
+        let url = `https://rickandmortyapi.com/api/character?page=${currentPage}`;
+        const filterParams = Object.entries(filters)
+            .filter(([key, value]) => value !== '')
+            .map(([key, value]) => `${key}=${value}`);
+        if (filterParams.length > 0) {
+            url += `&${filterParams.join('&')}`;
+        }
+        return url;
+    };
+
+    /*We use SWR to get the data from the API and send the currentPage as a parameter */
+    const {data, error, isLoading} = useSWR(buildFilterUrl(), fetcher);
 
     if (isLoading) return <div><Loader /></div>
     if (error) return <div>Error: {error.message}</div>
 
-    /* Los datos obtenidos de la API son de tipo ICharacter[] */
+    if (data.results === 0) return <div>No results found</div>
+
+    /* Get the data from the API as ICharacter[] */
     const characters: ICharacter[] = data.results;
 
-    /* Convertimos los datos de la API en ICharacterTable[] usando un adapter */
+    /* Convert the data from the API to ICharacterTable[] using an adapter */
     const charactersForTable: ICharacterTable[] = characters.map(characterAdapter);
 
-    /* Obtenemos el total de páginas */
+    /* Get the total number of pages */
     const totalPages = data.info.pages;
 
-    /* Cuando cambia la página, actualizamos la variable currentPage */
+    /* Update the currentPage variable when the page changes */
     const handlePageChange = (page: number) => {
         setCurrentPage(page);
     };
 
-    function sortItems<T>(items: T[], key: keyof T, order: 'asc' | 'desc'): T[] {
-        return [...items].sort((a, b) => {
-            const valueA = a[key];
-            const valueB = b[key];
+    /* Update the filters state when the filter changes */
+    const handleFilterChange = (newFilters: IFilterValues) => {
+        setFilters(newFilters);
+    };
 
-            if (typeof valueA === 'number' && typeof valueB === 'number') {
-                return order === 'asc' ? valueA - valueB : valueB - valueA;
-            } else {
-                const stringA = String(valueA).toLowerCase();
-                const stringB = String(valueB).toLowerCase();
-                return order === 'asc'
-                    ? stringA.localeCompare(stringB)
-                    : stringB.localeCompare(stringA);
-            }
-        });
-    }
-
-    /* Definimos las columnas de la tabla y si es necesario podemos definir un componente de renderizado para cada una */
+    /* Define the columns of the table and if necessary we can define a render component for each one */
     const columns: ColumnConfig<ICharacterTable>[] = [
-        {header: "Name", key: "name"},
-        {header: "Species", key: "species"},
-        {header: "Status", key: "status"},
+        {header: "Name", key: "name", sortable: true},
+        {header: "Species", key: "species", sortable: true},
+        {header: "Status", key: "status", sortable: true},
         {
             header: 'Portrait',
             key: "imageUrl",
-            render: (imageUrl, character) => <Image src={imageUrl} alt={`${character.name} image`} />
+            render: (imageUrl, character) => <Image src={imageUrl} alt={`${character.name} image`} />,
+            sortable: false
         }
     ];
 
     return (
         <>
             <div className="flex justify-center flex-col items-center py-4">
+                <CharacterFilters onFilterChange={handleFilterChange} />
                 <Pagination
                     currentPage={currentPage}
                     totalPages={totalPages}
@@ -80,6 +91,11 @@ const TableContainer: FC = () => {
                 <Suspense fallback={<Loader />}>
                     <Table columns={columns} items={charactersForTable} />
                 </Suspense>
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                />
             </div>
         </>
     )
