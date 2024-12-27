@@ -71,17 +71,16 @@ const TableContainer: FC = () => {
 
     return (
         <>
-            <div className="flex justify-between items-center">
-                <h1 className="text-2xl font-bold">Rick and Morty Characters</h1>
+            <div className="flex justify-center flex-col items-center py-4">
+                <Pagination
+                    currentPage={currentPage}
+                    totalPages={totalPages}
+                    onPageChange={handlePageChange}
+                />
+                <Suspense fallback={<Loader />}>
+                    <Table columns={columns} items={charactersForTable} />
+                </Suspense>
             </div>
-            <Pagination
-                currentPage={currentPage}
-                totalPages={totalPages}
-                onPageChange={handlePageChange}
-            />
-            <Suspense fallback={<Loader />}>
-                <Table columns={columns} items={charactersForTable} />
-            </Suspense>
         </>
     )
 }
