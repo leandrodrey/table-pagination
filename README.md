@@ -28,3 +28,9 @@ data from the API and the Table component, which is responsible for rendering th
 - Tailwind CSS.
 - TypeScript.
 - Vite.
+
+## How to run the project
+
+1. Clone the repository: `git clone https://github.com/leandrodrey/table-pagination`.
+2. Install the dependencies by running `yarn install`.
+3. Start the development server by running `yarn dev`.
