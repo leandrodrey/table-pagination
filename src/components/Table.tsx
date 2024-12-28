@@ -33,7 +33,7 @@ const Table = <T extends BaseTableItem>({items, columns}: TableProps<T>) => {
                         onClick={() => handleHeaderClick(column.key, column.sortable ?? true)}
                         style={{cursor: column.sortable ? 'pointer' : 'default'}}
                         role="columnheader"
-                        aria-sort={sortKey === column.key ? sortOrder : 'none'}
+                        aria-sort={sortKey === column.key ? (sortOrder === 'asc' ? 'ascending' : 'descending') : 'none'}
                         aria-label={column.header}
                     >
                         {column.header}
