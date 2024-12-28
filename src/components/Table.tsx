@@ -1,4 +1,4 @@
-import {ReactNode, useState} from "react";
+import {ReactNode} from "react";
 import useSortTable from "../hooks/useSortTable.tsx";
 
 interface BaseTableItem {
@@ -23,7 +23,7 @@ const Table = <T extends BaseTableItem>({items, columns}: TableProps<T>) => {
 
     // @ts-ignore
     return (
-        <table className="text-left">
+        <table className="text-left" role="table">
             <thead>
             <tr>
                 {columns.map((column) => (
@@ -32,10 +32,13 @@ const Table = <T extends BaseTableItem>({items, columns}: TableProps<T>) => {
                         className="p-3"
                         onClick={() => handleHeaderClick(column.key, column.sortable ?? true)}
                         style={{cursor: column.sortable ? 'pointer' : 'default'}}
+                        role="columnheader"
+                        aria-sort={sortKey === column.key ? sortOrder : 'none'}
+                        aria-label={column.header}
                     >
                         {column.header}
                         {sortKey === column.key && (
-                            <span className="ml-2">
+                            <span className="ml-2" role="img" aria-label={sortOrder === 'asc' ? 'ascending' : 'descending'}>
                                 {sortOrder === 'asc' ? '▲' : '▼'}
                             </span>
                         )}
@@ -45,9 +48,9 @@ const Table = <T extends BaseTableItem>({items, columns}: TableProps<T>) => {
             </thead>
             <tbody>
             {sortedItems.map((item) => (
-                <tr key={item.id} className="border-b border-gray-200">
+                <tr key={item.id} className="border-b border-gray-200" role="row">
                     {columns.map((column) => (
-                        <td key={String(column.key)} className="p-3">
+                        <td key={String(column.key)} className="p-3" role="cell">
                             {column.render ? (
                                 column.render(item[column.key], item)
                             ) : (
