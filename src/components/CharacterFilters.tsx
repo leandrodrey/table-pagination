@@ -10,8 +10,14 @@ const CharacterFilters: FC = () => {
         setFilters({ ...filters, [name]: value });
     };
 
+    const handleResetFilters = () => {
+        setFilters({ status: '', species: '', gender: '' });
+    };
+
+    const isFilterApplied = Object.values(filters).some((value) => value !== "");
+
     return (
-        <div className="flex flex-wrap gap-4 mb-4">
+        <div className="flex flex-wrap gap-4 mb-4 items-center">
             <div>
                 <label htmlFor="status">Status:</label>
                 <select
@@ -54,6 +60,14 @@ const CharacterFilters: FC = () => {
                     <option value="unknown">Unknown</option>
                 </select>
             </div>
+            {isFilterApplied && (
+                <button
+                    className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded"
+                    onClick={handleResetFilters}
+                >
+                    Reset filters
+                </button>
+            )}
         </div>
     );
 };
