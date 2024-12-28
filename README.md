@@ -4,6 +4,12 @@ App to show the characters of Rick and Morty using the API: https://rickandmorty
 
 ## About the project
 
+The main functionality of the project is to display a table of characters from the Rick and Morty API,
+with the ability to filter the results by status, species and gender and to paginate through the results. 
+Also you can sort the results by name, species or status.
+
+## The project structure
+
 The principal components are the TableContainer component, which is responsible for fetching the 
 data from the API and the Table component, which is responsible for rendering the table.
 
