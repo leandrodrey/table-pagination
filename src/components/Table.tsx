@@ -19,14 +19,14 @@ interface ColumnConfig<T> {
 
 const Table = <T extends BaseTableItem>({items, columns}: TableProps<T>) => {
 
-    const { sortedItems, sortKey, sortOrder, handleHeaderClick } = useSortTable({ items });
+    const {sortedItems, sortKey, sortOrder, handleHeaderClick} = useSortTable({items});
 
     // @ts-ignore
     return (
         <table className="text-left" role="table">
             <thead>
             <tr>
-                {columns.map((column) => (
+                {columns.map((column: ColumnConfig<T>) => (
                     <th
                         key={String(column.key)}
                         className="p-3"
@@ -49,13 +49,13 @@ const Table = <T extends BaseTableItem>({items, columns}: TableProps<T>) => {
             <tbody>
             {sortedItems.map((item) => (
                 <tr key={item.id} className="border-b border-gray-200" role="row">
-                    {columns.map((column) => (
+                    {columns.map((column: ColumnConfig<T>) => (
                         <td key={String(column.key)} className="p-3" role="cell">
-                            {column.render ? (
+                            {column.render ?
                                 column.render(item[column.key], item)
-                            ) : (
-                                item[column.key]
-                            )}
+                                :
+                                String(item[column.key])
+                            }
                         </td>
                     ))}
                 </tr>
