@@ -1,4 +1,3 @@
-// services/characterService.ts
 import { ICharacter } from "../interfaces/ICharacter";
 import useFiltersStore from "../hooks/useFiltersStore";
 
