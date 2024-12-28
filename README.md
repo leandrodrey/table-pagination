@@ -9,7 +9,15 @@ Also you can sort the results by name, species or status.
 
 ## The project structure
 This project is built using TypeScript and React and focus to use clean architecture principles.
+The components are organized in the following folders:
+- **`components`:** Contains reusable UI components.
+- **`interfaces`:** Defines TypeScript interfaces for data structures.
+- **`services`:**  Encapsulates API interaction logic.
+- **`hooks`:**  Custom hooks for reusable logic.
+- **`utils`:**  Utility functions.
+- **`App.tsx`:**  Main application component.
 
+## Components
 The principal components are the TableContainer component, which is responsible for fetching the 
 data from the API and the Table component, which is responsible for rendering the table.
 
@@ -23,7 +31,7 @@ data from the API and the Table component, which is responsible for rendering th
 - Renders the table with the configured columns and the sorted items.
 - Uses the useSortTable custom hook to sort the items of the current page.
 
-## Dependencies
+## Technologies used
 ### Production dependencies
 - SWR to provide data fetching, caching, revalidation and error handling.
 - Zustand to manage the state of the filters.
