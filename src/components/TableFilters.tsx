@@ -4,7 +4,7 @@ interface Props {
     onFilterChange: (filters: { status: string; species: string; gender: string }) => void;
 }
 
-const CharacterFilters: FC<Props> = ({ onFilterChange }) => {
+const TableFilters: FC<Props> = ({ onFilterChange }) => {
     const [filters, setFilters] = useState({ status: '', species: '', gender: '' });
 
     const handleFilterChange = (event: ChangeEvent<HTMLSelectElement>) => {
@@ -78,4 +78,4 @@ const CharacterFilters: FC<Props> = ({ onFilterChange }) => {
     );
 };
 
-export default CharacterFilters;
+export default TableFilters;

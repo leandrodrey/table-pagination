@@ -5,7 +5,7 @@ import {ICharacterTable} from "../interfaces/ICharacterTable.ts";
 import {characterAdapter} from "../adapters/characterAdapter.ts";
 import Loader from "./Loader.tsx";
 import Pagination from "./Pagination.tsx";
-import CharacterFilters from "./CharacterFilters.tsx";
+import TableFilters from "./TableFilters.tsx";
 import Table from "./Table.tsx";
 import Image from "./Image.tsx";
 import {characterService} from "../services/characterService.ts";
@@ -68,7 +68,7 @@ const TableContainer: FC = () => {
     return (
         <>
             <div className="flex justify-center flex-col items-center py-4">
-                <CharacterFilters onFilterChange={setFilters} />
+                <TableFilters onFilterChange={setFilters} />
                 <Pagination
                     currentPage={currentPage}
                     totalPages={totalPages}
