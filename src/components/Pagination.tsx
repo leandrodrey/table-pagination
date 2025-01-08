@@ -11,7 +11,7 @@ const Pagination: FC<PaginationProps> = ({currentPage, totalPages, onPageChange}
     const pages = Array.from({length: totalPages}, (_, i) => i + 1);
 
     return (
-        <div>
+        <nav aria-label="Pagination">
             <ul className="flex justify-center items-center gap-1">
                 {currentPage > 1 && (
                     <li onClick={() => onPageChange(currentPage - 1)}>
@@ -33,7 +33,7 @@ const Pagination: FC<PaginationProps> = ({currentPage, totalPages, onPageChange}
                     </li>
                 )}
             </ul>
-        </div>
+        </nav>
     );
 };
 
