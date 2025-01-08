@@ -1,2 +1,1 @@
-import '@testing-library/jest-dom'; // If you need jest-dom matchers
-// Other global setup...
+import '@testing-library/jest-dom';
