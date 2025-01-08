@@ -1,38 +1,32 @@
-import {FC, ReactNode, Suspense, useState} from 'react';
+import {FC, Suspense, useState} from 'react';
 import useSWR from "swr";
 import {ICharacter} from "../interfaces/ICharacter.ts";
 import {ICharacterTable} from "../interfaces/ICharacterTable.ts";
+import {IColumnConfig} from "../interfaces/IColumnConfig.ts";
+import {characterService} from "../services/characterService.ts";
 import {characterAdapter} from "../adapters/characterAdapter.ts";
 import Loader from "./Loader.tsx";
 import Pagination from "./Pagination.tsx";
 import TableFilters from "./TableFilters.tsx";
 import Table from "./Table.tsx";
 import Image from "./Image.tsx";
-import {characterService} from "../services/characterService.ts";
-
-interface ColumnConfig<T> {
-    header: string;
-    key: keyof T;
-    render?: (value: any, item: T) => ReactNode;
-    sortable?: boolean;
-}
 
 const TableContainer: FC = () => {
 
     /* Set the currentPage value to 1 */
     const [currentPage, setCurrentPage] = useState(1);
-    const [filters, setFilters] = useState({ status: '', species: '', gender: '' });
+    const [filters, setFilters] = useState({status: '', species: '', gender: ''});
 
     /* We use SWR to get the data from the service */
-    const { data, error, isLoading } = useSWR(
+    const {data, error, isLoading} = useSWR(
         [`/api/characters?page=${currentPage}`, filters], // We use the filters as a dependency
-        ([]) => characterService.getCharacters({ page: currentPage, filters })
+        ([]) => characterService.getCharacters({page: currentPage, filters})
     );
 
-    if (isLoading) return <div><Loader /></div>
+    if (isLoading) return <div><Loader/></div>
     if (error) return <div>Error: {error.message}</div>
     if (!data?.results) {
-        setFilters({ status: '', species: '', gender: '' });
+        setFilters({status: '', species: '', gender: ''});
         return (
             <div className="text-white text-xl text-center pt-8">No results found</div>
         )
@@ -53,14 +47,14 @@ const TableContainer: FC = () => {
     };
 
     /* Define the columns of the table and if necessary we can define a render component for each one */
-    const columns: ColumnConfig<ICharacterTable>[] = [
+    const columns: IColumnConfig<ICharacterTable>[] = [
         {header: "Name", key: "name", sortable: true},
         {header: "Species", key: "species", sortable: true},
         {header: "Status", key: "status", sortable: true},
         {
             header: 'Portrait',
             key: "imageUrl",
-            render: (imageUrl, character) => <Image src={imageUrl} alt={`${character.name} image`} />,
+            render: (imageUrl, character) => <Image src={imageUrl} alt={`${character.name} image`}/>,
             sortable: false
         }
     ];
@@ -68,14 +62,14 @@ const TableContainer: FC = () => {
     return (
         <>
             <div className="flex justify-center flex-col items-center py-4">
-                <TableFilters onFilterChange={setFilters} />
+                <TableFilters onFilterChange={setFilters}/>
                 <Pagination
                     currentPage={currentPage}
                     totalPages={totalPages}
                     onPageChange={handlePageChange}
                 />
-                <Suspense fallback={<Loader />}>
-                    <Table columns={columns} items={charactersForTable} />
+                <Suspense fallback={<Loader/>}>
+                    <Table columns={columns} items={charactersForTable}/>
                 </Suspense>
                 <Pagination
                     currentPage={currentPage}
