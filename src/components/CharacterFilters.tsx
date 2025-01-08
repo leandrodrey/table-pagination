@@ -1,17 +1,23 @@
-import {ChangeEvent, FC} from 'react';
-import useFiltersStore from "../hooks/useFiltersStore.ts";
+import {ChangeEvent, FC, useState} from 'react';
 
-const CharacterFilters: FC = () => {
-    const filters = useFiltersStore((state) => state.filters);
-    const setFilters = useFiltersStore((state) => state.setFilters);
+interface Props {
+    onFilterChange: (filters: { status: string; species: string; gender: string }) => void;
+}
+
+const CharacterFilters: FC<Props> = ({ onFilterChange }) => {
+    const [filters, setFilters] = useState({ status: '', species: '', gender: '' });
 
     const handleFilterChange = (event: ChangeEvent<HTMLSelectElement>) => {
         const { name, value } = event.target;
-        setFilters({ ...filters, [name]: value });
+        const updatedFilters = { ...filters, [name]: value };
+        setFilters(updatedFilters);
+        onFilterChange(updatedFilters);
     };
 
     const handleResetFilters = () => {
-        setFilters({ status: '', species: '', gender: '' });
+        const resetFilters = { status: '', species: '', gender: '' };
+        setFilters(resetFilters);
+        onFilterChange(resetFilters);
     };
 
     const isFilterApplied = Object.values(filters).some((value) => value !== "");

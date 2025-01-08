@@ -1,5 +1,5 @@
 export interface IFilterValues {
-    status: string;
-    species: string;
-    gender: string;
+    status?: string;
+    species?: string;
+    gender?: string;
 }

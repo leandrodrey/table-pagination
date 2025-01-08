@@ -2,7 +2,6 @@ import {FC, ReactNode, Suspense, useState} from 'react';
 import useSWR from "swr";
 import {ICharacter} from "../interfaces/ICharacter.ts";
 import {ICharacterTable} from "../interfaces/ICharacterTable.ts";
-import useFiltersStore from "../hooks/useFiltersStore.ts";
 import {characterAdapter} from "../adapters/characterAdapter.ts";
 import Loader from "./Loader.tsx";
 import Pagination from "./Pagination.tsx";
@@ -22,13 +21,12 @@ const TableContainer: FC = () => {
 
     /* Set the currentPage value to 1 */
     const [currentPage, setCurrentPage] = useState(1);
-    const filters = useFiltersStore((state) => state.filters);
-    const setFilters = useFiltersStore((state) => state.setFilters);
+    const [filters, setFilters] = useState({ status: '', species: '', gender: '' });
 
     /* We use SWR to get the data from the service */
     const { data, error, isLoading } = useSWR(
         [`/api/characters?page=${currentPage}`, filters], // We use the filters as a dependency
-        ([]) => characterService.getCharacters(currentPage)
+        ([]) => characterService.getCharacters({ page: currentPage, filters })
     );
 
     if (isLoading) return <div><Loader /></div>
@@ -70,7 +68,7 @@ const TableContainer: FC = () => {
     return (
         <>
             <div className="flex justify-center flex-col items-center py-4">
-                <CharacterFilters/>
+                <CharacterFilters onFilterChange={setFilters} />
                 <Pagination
                     currentPage={currentPage}
                     totalPages={totalPages}
