@@ -41,6 +41,11 @@ data from the API and the Table component, which is responsible for rendering th
 - Tailwind CSS.
 - TypeScript.
 - Vite.
+- Vitest.
+- Testing Library.
+
+## Testing
+The project uses [Vitest](https://vitest.dev/) and [Testing Library](https://testing-library.com/docs/react-testing-library/intro/) for testing.
 
 ## How to run the project
 1. Clone the repository: `git clone https://github.com/leandrodrey/table-pagination`.
