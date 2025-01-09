@@ -10,12 +10,13 @@ import Pagination from "./Pagination.tsx";
 import TableFilters from "./TableFilters.tsx";
 import Table from "./Table.tsx";
 import Image from "./Image.tsx";
+import {filterConfig} from "../config/TableFiltersConfig.ts";
 
 const TableContainer: FC = () => {
 
     /* Set the currentPage value to 1 */
     const [currentPage, setCurrentPage] = useState(1);
-    const [filters, setFilters] = useState({status: '', species: '', gender: ''});
+    const [filters, setFilters] = useState({ status: '', species: '', gender: '' });
 
     /* We use SWR to get the data from the service */
     const {data, error, isLoading} = useSWR(
@@ -46,6 +47,14 @@ const TableContainer: FC = () => {
         setCurrentPage(page);
     };
 
+    const handleFilterChange = (name: string, value: string) => {
+        setFilters({ ...filters, [name]: value });
+    };
+
+    const handleResetFilters = () => {
+        setFilters({ status: '', species: '', gender: '' });
+    };
+
     /* Define the columns of the table and if necessary we can define a render component for each one */
     const columns: IColumnConfig<ICharacterTable>[] = [
         {header: "Name", key: "name", sortable: true},
@@ -62,7 +71,12 @@ const TableContainer: FC = () => {
     return (
         <>
             <div className="flex justify-center flex-col items-center py-4">
-                <TableFilters onFilterChange={setFilters}/>
+                <TableFilters
+                    filters={filters} // Pasar los filtros como props
+                    onFilterChange={handleFilterChange} // Pasar la función para actualizar los filtros
+                    onResetFilters={handleResetFilters} // Pasar la función para resetear los filtros
+                    filterConfig={filterConfig}
+                />
                 <Pagination
                     currentPage={currentPage}
                     totalPages={totalPages}

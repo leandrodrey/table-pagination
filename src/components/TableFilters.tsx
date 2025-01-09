@@ -1,75 +1,46 @@
-import {ChangeEvent, FC, useState} from 'react';
+import { ChangeEvent, FC } from 'react';
+import {ITableFilterConfig} from "../interfaces/ITableFilterConfig.ts";
+
 
 interface Props {
-    onFilterChange: (filters: { status: string; species: string; gender: string }) => void;
+    filters: { [key: string]: string };
+    onFilterChange: (name: string, value: string) => void;
+    onResetFilters: () => void;
+    filterConfig: ITableFilterConfig[];
 }
 
-const TableFilters: FC<Props> = ({ onFilterChange }) => {
-    const [filters, setFilters] = useState({ status: '', species: '', gender: '' });
-
+const TableFilters: FC<Props> = ({ filters, onFilterChange, onResetFilters, filterConfig }) => {
     const handleFilterChange = (event: ChangeEvent<HTMLSelectElement>) => {
         const { name, value } = event.target;
-        const updatedFilters = { ...filters, [name]: value };
-        setFilters(updatedFilters);
-        onFilterChange(updatedFilters);
+        onFilterChange(name, value);
     };
 
-    const handleResetFilters = () => {
-        const resetFilters = { status: '', species: '', gender: '' };
-        setFilters(resetFilters);
-        onFilterChange(resetFilters);
-    };
-
-    const isFilterApplied = Object.values(filters).some((value) => value !== "");
+    const isFilterApplied = Object.values(filters).some((value) => value !== '');
 
     return (
         <div className="flex flex-wrap gap-4 mb-4 items-center">
-            <div>
-                <label htmlFor="status">Status:</label>
-                <select
-                    id="status"
-                    name="status"
-                    value={filters.status}
-                    onChange={handleFilterChange}
-                >
-                    <option value="">All</option>
-                    <option value="alive">Alive</option>
-                    <option value="dead">Dead</option>
-                    <option value="unknown">Unknown</option>
-                </select>
-            </div>
-            <div>
-                <label htmlFor="species">Species:</label>
-                <select
-                    id="species"
-                    name="species"
-                    value={filters.species}
-                    onChange={handleFilterChange}
-                >
-                    <option value="">All</option>
-                    <option value="Human">Human</option>
-                    <option value="Alien">Alien</option>
-                </select>
-            </div>
-            <div>
-                <label htmlFor="gender">Gender:</label>
-                <select
-                    id="gender"
-                    name="gender"
-                    value={filters.gender}
-                    onChange={handleFilterChange}
-                >
-                    <option value="">All</option>
-                    <option value="female">Female</option>
-                    <option value="male">Male</option>
-                    <option value="genderless">Genderless</option>
-                    <option value="unknown">Unknown</option>
-                </select>
-            </div>
+            {filterConfig.map((filter) => (
+                <div key={filter.name}>
+                    <label htmlFor={filter.name}>{filter.label}:</label>
+                    <select
+                        id={filter.name}
+                        name={filter.name}
+                        value={filters[filter.name]} // Usar los filtros recibidos por props
+                        onChange={handleFilterChange}
+                    >
+                        <option value="">All</option>
+                        {filter.options.map((option) => (
+                            <option key={option.value} value={option.value}>
+                                {option.label}
+                            </option>
+                        ))}
+                    </select>
+                </div>
+            ))}
             {isFilterApplied && (
                 <button
                     className="bg-blue-500 hover:bg-blue-700 text-white py-1 px-2 rounded"
-                    onClick={handleResetFilters}
+                    onClick={onResetFilters} // Llamar a la función para resetear el estado en TableContainer
                 >
                     Reset filters
                 </button>
