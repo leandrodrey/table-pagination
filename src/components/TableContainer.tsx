@@ -32,7 +32,7 @@ const TableContainer: FC = () => {
     if (isLoading) return <div><Loader/></div>
     if (error) return <div>Error: {error.message}</div>
     if (!data?.results) {
-        setFilters({status: '', species: '', gender: ''});
+        setFilters(initialFilters);
         return (
             <div className="text-white text-xl text-center pt-8">No results found</div>
         )
