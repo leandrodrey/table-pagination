@@ -12,7 +12,7 @@ const Pagination: FC<PaginationProps> = ({currentPage, totalPages, onPageChange}
 
     return (
         <nav aria-label="Pagination">
-            <ul className="flex justify-center items-center gap-1">
+            <ul className="flex justify-center items-center gap-1 flex-wrap">
                 {currentPage > 1 && (
                     <li onClick={() => onPageChange(currentPage - 1)}>
                         <button>Prev</button>
