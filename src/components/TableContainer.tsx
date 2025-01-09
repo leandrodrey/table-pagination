@@ -10,13 +10,18 @@ import Pagination from "./Pagination.tsx";
 import TableFilters from "./TableFilters.tsx";
 import Table from "./Table.tsx";
 import Image from "./Image.tsx";
-import {filterConfig} from "../config/TableFiltersConfig.ts";
+import {TableFiltersConfig} from "../config/TableFiltersConfig.ts";
 
 const TableContainer: FC = () => {
 
     /* Set the currentPage value to 1 */
     const [currentPage, setCurrentPage] = useState(1);
-    const [filters, setFilters] = useState({ status: '', species: '', gender: '' });
+
+    const initialFilters = Object.fromEntries(
+        TableFiltersConfig.map((filter) => [filter.name, ''])
+    );
+
+    const [filters, setFilters] = useState(initialFilters);
 
     /* We use SWR to get the data from the service */
     const {data, error, isLoading} = useSWR(
@@ -75,7 +80,7 @@ const TableContainer: FC = () => {
                     filters={filters}
                     onFilterChange={handleFilterChange}
                     onResetFilters={handleResetFilters}
-                    filterConfig={filterConfig}
+                    filterConfig={TableFiltersConfig}
                 />
                 <Pagination
                     currentPage={currentPage}

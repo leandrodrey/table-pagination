@@ -1,7 +1,7 @@
 import {ITableFilterConfig} from "../interfaces/ITableFilterConfig.ts";
 
 
-export const filterConfig: ITableFilterConfig[] = [
+export const TableFiltersConfig: ITableFilterConfig[] = [
     {
         name: 'status',
         label: 'Status',
