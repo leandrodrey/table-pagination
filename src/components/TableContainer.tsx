@@ -72,9 +72,9 @@ const TableContainer: FC = () => {
         <>
             <div className="flex justify-center flex-col items-center py-4">
                 <TableFilters
-                    filters={filters} // Pasar los filtros como props
-                    onFilterChange={handleFilterChange} // Pasar la función para actualizar los filtros
-                    onResetFilters={handleResetFilters} // Pasar la función para resetear los filtros
+                    filters={filters}
+                    onFilterChange={handleFilterChange}
+                    onResetFilters={handleResetFilters}
                     filterConfig={filterConfig}
                 />
                 <Pagination
